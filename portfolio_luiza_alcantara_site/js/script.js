@@ -40,3 +40,26 @@ document.querySelectorAll('.filters button').forEach(function(b){
     if(e.key==='ArrowRight')step(1);
   });
 })();
+
+/* menu do celular */
+(function(){
+  var nav=document.querySelector('.nav'),btn=document.querySelector('.menu-btn');
+  if(!nav||!btn)return;
+  function set(o){nav.classList.toggle('open',o);btn.setAttribute('aria-expanded',o?'true':'false');btn.setAttribute('aria-label',o?'Fechar menu':'Abrir menu')}
+  btn.addEventListener('click',function(){set(!nav.classList.contains('open'))});
+  nav.querySelectorAll('ul a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+  document.addEventListener('click',function(e){if(!nav.contains(e.target))set(false)});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
+  window.addEventListener('resize',function(){if(window.innerWidth>900)set(false)});
+})();
+
+/* deslizar o dedo para trocar de foto no lightbox */
+(function(){
+  var lb=document.getElementById('lb'),x0=null,y0=null;
+  lb.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  lb.addEventListener('touchend',function(e){
+    if(x0===null)return;
+    var dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){lb.querySelector(dx<0?'.n':'.p').click()}
+  },{passive:true});
+})();
